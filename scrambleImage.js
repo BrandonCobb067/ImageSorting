@@ -208,6 +208,7 @@ const insertionSortVisualize = (blocks, ctx, blockSizeX, blockSizeY, width, heig
         let j = i - 1;
         while (j >= 0 && blocks[j].index > key) {
             await insertionSwap(j + 1, j);
+            await delay();
             j = j - 1;
         }
         

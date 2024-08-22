@@ -108,9 +108,20 @@
 
     .slider-container {
       display: flex;
+      justify-content: center;
+      gap: 20px; /* Adds space between the sliders */
+    }
+
+    .slider-wrapper {
+      display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+    }
+
+    .slider-wrapper .slider-label {
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #333;
     }
 
     .slider-container input[type="range"] {
@@ -197,7 +208,7 @@
     <div id="originalImageContainer" class="image-container">
       <img id="originalImage" alt="Original Image" class="hidden">
       <div id="placeholder" class="placeholder">
-        <img src="\ImageSorting\images\upload.png" alt="Upload Placeholder" class="placeholder-image">
+        <img src="\ImageSorting\\images\upload.png" alt="Upload Placeholder" class="placeholder-image">
         <p class="placeholder-text">Upload an Image</p>
       </div>
     </div>    
@@ -207,12 +218,19 @@
       </div>
       <button id="scrambleButton">Scramble</button>
       <div class="slider-container">
-        <input id="scrambleSlider" type="range" min="2" max="20" value="4" step="2">
+        <div class="slider-wrapper">
+          <label for="scrambleSlider" class="slider-label">Scramble Intensity</label>
+          <input id="scrambleSlider" type="range" min="2" max="20" value="4" step="2">
+        </div>
+        <div class="slider-wrapper">
+          <label for="speedSlider" class="slider-label">Sorting Speed</label>
+          <input id="speedSlider" type="range" min="0" max="400" value="0" step="2">
+        </div>
       </div>
       <button id="sortButton">Sort</button>
-      <div class="slider-container">
-        <input id="speedSlider" type="range" min="0" max="400" value="0" step="2">
-      </div>
+      <!-- <div class="slider-container">
+        
+      </div> -->
       <div class="custom-select-wrapper">
         <select class="custom-select" onchange="chooseAlgorithm(this.value)">
             <option value="Insertion Sort">Insertion Sort</option>
@@ -226,7 +244,7 @@
     <div class="scramble-container">
       <img id="scrambledImage" alt="Scrambled Image" class="hidden">
       <div id="scrambleplaceholder" class="placeholder">
-        <img src="\ImageSorting\images\missing.png" alt="Upload Placeholder" class="scramblePlaceholder-image">
+        <img src="\ImageSorting\\images\missing.png" alt="Upload Placeholder" class="scramblePlaceholder-image">
       </div>
     </div>
   </div>
