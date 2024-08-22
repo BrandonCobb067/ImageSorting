@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scramble Image</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .disclaimer {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #ff0000; /* Red text color for warning */
+      padding: 10px 0;
+      z-index: 2; /* Ensure it stays above other elements */
+    }
+
+    .main-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 100%;
+      width: 100%;
+    }
+
+    .scramble-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 98%;
+      border: 2px dashed #929292;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .scramble-container img {
+      max-height: 100%;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      border: none;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 98%;
+      border: 2px dashed #929292;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .image-container:hover {
+      background-color: rgba(119, 119, 119, 0.2); /* Grey highlight */
+      border-color: #686868; /* Slightly darker border */
+    }
+
+    .image-container img {
+      max-height: 100%;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      border: none;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-container img,
+    .placeholder {
+      position: absolute;
+      transition: opacity 0.5s ease;
+    }
+
+    .image-container.drag-over {
+      border-color: #aaa;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .button-container button {
+      width: 100px;
+      height: 40px;
+    }
+
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slider-container input[type="range"] {
+      writing-mode: bt-lr; /* Change the orientation to vertical */
+      -webkit-appearance: slider-vertical;
+      width: 8px;
+      height: 150px;
+    }
+
+    select.custom-select {
+      width: 200px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      appearance: none; /* Remove default dropdown icon */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      position: relative;
+    }
+
+    .hidden {
+      opacity: 0;
+    }
+
+    #originalImage {
+      max-height: 100%;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      z-index: 1;
+    }
+
+    .custom-select-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .custom-select-arrow {
+      position: absolute;
+      top: 14px;
+      right: 10px;
+      pointer-events: none;
+      border-top: 5px solid #333;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+    }
+
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 0;
+    }
+
+    .placeholder-image {
+      width: 150px; /* Increased size */
+      height: auto;
+      opacity: 0.7; /* Slightly increased opacity */
+      margin-bottom: 70px;
+    }
+
+    .scramblePlaceholder-image {
+      width: 100px; /* Increased size */
+      height: auto;
+      opacity: 0.5; /* Slightly increased opacity */
+      margin-bottom: 70px;
+    }
+
+    .placeholder-text {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #666;
+      opacity: 0.8;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div id="originalImageContainer" class="image-container">
+      <img id="originalImage" alt="Original Image" class="hidden">
+      <div id="placeholder" class="placeholder">
+        <img src="\images\upload.png" alt="Upload Placeholder" class="placeholder-image">
+        <p class="placeholder-text">Upload an Image</p>
+      </div>
+    </div>    
+    <div class="button-container">
+      <div class="disclaimer">
+        *Note: Higher resolution images<p> may take longer to render.</p>
+      </div>
+      <button id="scrambleButton">Scramble</button>
+      <div class="slider-container">
+        <input id="scrambleSlider" type="range" min="2" max="20" value="4" step="2">
+      </div>
+      <button id="sortButton">Sort</button>
+      <div class="slider-container">
+        <input id="speedSlider" type="range" min="0" max="400" value="0" step="2">
+      </div>
+      <div class="custom-select-wrapper">
+        <select class="custom-select" onchange="chooseAlgorithm(this.value)">
+            <option value="Insertion Sort">Insertion Sort</option>
+            <option value="Merge Sort">Merge Sort</option>
+            <option value="Bubble Sort">Bubble Sort</option>
+            <option value="Heap Sort">Heap Sort</option>
+        </select>
+        <span class="custom-select-arrow"></span>
+      </div>
+    </div>
+    <div class="scramble-container">
+      <img id="scrambledImage" alt="Scrambled Image" class="hidden">
+      <div id="scrambleplaceholder" class="placeholder">
+        <img src="\images\missing.png" alt="Upload Placeholder" class="scramblePlaceholder-image">
+      </div>
+    </div>
+  </div>
+  <script src="scrambleImage.js"></script>
+</body>
+</html>
